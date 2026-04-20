@@ -3,7 +3,9 @@ const path = require('path');
 const app = express();
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Serve index.html from root (no public/ folder)
+app.use(express.static(__dirname));
 
 // Claude AI chat proxy — keeps API key server-side
 app.post('/api/chat', async (req, res) => {
@@ -39,10 +41,10 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-// Serve index.html for all other routes
+// Fallback — serve index.html for any unmatched route
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`AL-Eissa Law Firm running on port ${PORT}`));
